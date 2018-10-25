@@ -1,0 +1,23 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.doosan.demo.dao.IDoosanDemoMapper">
+	
+	<select id="getDevices" resultType="hashmap">
+		SELECT /* [DoosanDemo.xml].[getDevices] */
+/*			DEV_ID devId,
+			RCV_DT rcvDt,
+			SENSOR_CD sensorCd,
+			DATA_CD dataCd,
+			DATA_VAL dataVal,
+			DATA_SEQ dataSeq,
+			RESV_5 resv5
+		FROM SENSOR_DATA*/
+			FILE_ID fileId,
+			FILE_TYPE fileType,
+			FILE_NM fileNm,
+			FilE_PATH filePath,
+			RESV_5 resv5,
+			RESV_4 resv4
+		FROM SENSOR_FILE_PATH
+	</select>
+	
+</mapper>
