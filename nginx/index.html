@@ -85,6 +85,7 @@
         // mode: 'no-cors',
         // withCredentials: true
     }
+
     connectBtn.addEventListener('click', () => {
         fetch('/api/redis/connect')
             .then(status)
@@ -98,6 +99,7 @@
                 msg.innerHTML = 'Redis Server ERROR ....'
             })
     })
+
     disconnectBtn.addEventListener('click', () => {
         fetch('/api/redis/disconnect')
             .then(status)
@@ -111,21 +113,19 @@
                 msg.innerHTML = 'Redis Server ERROR ....'
             })
     })
-    // msg.insertAdjacentHTML('beforeend', "<b>Hello</b> <br>")
 
     viewBtn.addEventListener('click', () => {
         fetch('/view/hello')
             .then(status)
             .then(function(data) {
                 console.log('response', data.body)
-                msg.innerHTML = 'RESPONSE ....' + data.body
+                msg.innerHTML = 'RESPONSE ....API Server HelloWorld!!'
             })
             .catch(function(error) {
                 console.log('Request failed', error)
                 msg.innerHTML = 'API Server ERROR ....'
             })
     })
-
 
 </script>
 </body>
