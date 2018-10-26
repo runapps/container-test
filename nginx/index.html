@@ -1,22 +1,64 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="-1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ikho test</title>
+    <title>ikho's test</title>
+    <style>
+        .container {
+            width: 70%;
+            height: 70%;
+            margin: 50px auto;
+            /* background: red; */
+        }
+
+        .outer {
+            display: table;
+            width: 100%;
+            height: 100%;
+        }
+
+        .inner {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .centered {
+            position: relative;
+            display: inline-block;
+            width: 50%;
+            padding: 1em;
+            /* background: orange; */
+            /* color: white; */
+        }
+
+        .btn {
+            height: 30px;
+        }
+
+        .status {
+            margin: 10px;
+            color: red;
+        }
+    </style>
 </head>
-
 <body>
-<div id="root" style="height: 100%;">
-    <button id="connectBtn">Redis Connect</button>
-    <button id="disconnectBtn">Redis Disconnect</button>
-
-    <button id="viewBtn">Hello View</button>
-    <div id="msg"></div>
+<div class="container">
+    <div class="outer">
+        <div class="inner">
+            <div class="centered">
+                <button id="connectBtn" class="btn">Redis Connect</button>
+                <button id="disconnectBtn" class="btn">Redis Disconnect</button>
+                <button id="viewBtn" class="btn">Hello View</button>
+                <div id="msg" class="status">Redis connection status</div>
+                <img src="docker-official.svg" />
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     const msg = document.getElementById('msg')
