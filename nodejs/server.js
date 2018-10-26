@@ -28,11 +28,13 @@ let redis
 
 app.use(bodyParser.json({ limit: '50mb' }))
 
-app.all('/api/redis/connect', (req, res) => {
+const handleRedisConnect = (res) => {
     redis = require('redis').createClient(config.redis.port, config.redis.hostname)
     redis.on('connect', () => {
         log(`${config.redis.hostname}:${config.redis.port} redis connected...`)
-        res.status(200).json(CODE200)
+        if (res) {
+            res.status(200).json(CODE200)
+        }
     })
 
     redis.on('error', (err) => {
@@ -46,6 +48,11 @@ app.all('/api/redis/connect', (req, res) => {
     redis.on('reconnecting', () => {
         log('redis reconnecting...')
     })
+}
+handleRedisConnect()
+
+app.all('/api/redis/connect', (req, res) => {
+    handleRedisConnect(res)
 })
 
 app.get('/api/redis/disconnect', (req, res) => {
