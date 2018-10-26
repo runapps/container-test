@@ -1,5 +1,6 @@
 const http = require('http')
 const express = require('express')
+const cors = require('cors')
 const app = express()
 const server = http.createServer(app)
 const debug = require('debug')
@@ -7,6 +8,7 @@ const debug = require('debug')
 const bodyParser = require('body-parser')
 const log = debug('app:server')
 debug.enable('app:*')
+app.use(cors())
 
 const config = {
     server: {
@@ -26,7 +28,7 @@ let redis
 
 app.use(bodyParser.json({ limit: '50mb' }))
 
-app.get('/api/redis/connect', (req, res) => {
+app.all('/api/redis/connect', (req, res) => {
     redis = require('redis').createClient(config.redis.port, config.redis.hostname)
     redis.on('connect', () => {
         log(`${config.redis.hostname}:${config.redis.port} redis connected...`)
@@ -47,17 +49,31 @@ app.get('/api/redis/connect', (req, res) => {
 })
 
 app.get('/api/redis/disconnect', (req, res) => {
-    redis.quit(() => {
-        log(`${config.redis.hostname}:${config.redis.port} redis disconnected...`)
-        res.status(200).json(CODE200)
-    })
+    try {
+        redis.quit((err) => {
+            if (redis.connected) {
+                log(`${config.redis.hostname}:${config.redis.port} redis disconnected...`)
+                res.status(200).json(CODE200)
+            } else {
+                res.status(500).json(CODE500)
+            }
+        })
+    } catch (e) {
+        res.status(500).json(CODE500)
+    }
+
+
+    // redis.on('end', () => {
+    //   log(`${config.redis.hostname}:${config.redis.port} redis disconnected...`)
+    //   res.status(200).json(CODE200)
+    // })
+    // res.status(500).json(CODE500)
 })
 
 app.get('/api/check/liveness', (req, res) => {
     res.status(200).json(CODE200)
 })
 app.get('/api/check/readiness', (req, res) => {
-    log(redis)
     if (redis && redis.connected) {
         res.status(200).json(CODE200)
     } else {

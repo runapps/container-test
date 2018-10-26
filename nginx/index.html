@@ -53,7 +53,7 @@
             <div class="centered">
                 <button id="connectBtn" class="btn">Redis Connect</button>
                 <button id="disconnectBtn" class="btn">Redis Disconnect</button>
-                <button id="viewBtn" class="btn">Hello View</button>
+                <button id="viewBtn" class="btn">API-Server</button>
                 <div id="msg" class="status">Redis connection status</div>
                 <img src="docker-official.svg" />
             </div>
@@ -66,31 +66,67 @@
     const disconnectBtn = document.getElementById('disconnectBtn')
     const viewBtn = document.getElementById('viewBtn')
 
+    function status(response) {
+        console.log('response', response)
+        if (response.status >= 200 && response.status < 300) {
+            return Promise.resolve(response)
+        } else {
+            return Promise.reject(new Error(response.statusText))
+        }
+    }
+    function json(response) {
+        return response.json()
+    }
+    const config = {
+        headers: {
+           'Access-Control-Allow-Origin': '*',
+           'Content-Type': 'text/html; charset=utf-8',
+         },
+        // mode: 'no-cors',
+        // withCredentials: true
+    }
     connectBtn.addEventListener('click', () => {
-        fetch('/api/redis/connect', {
-        mode: 'no-cors'
-    })
-    .then((res) => {
-        msg.innerHTML = "Redis Connected..."
-    })
+        fetch('/api/redis/connect')
+            .then(status)
+            .then(json)
+            .then(function(data) {
+                console.log('Request succeeded with JSON response', data)
+                msg.innerHTML = 'Redis connected...'
+            })
+            .catch(function(error) {
+                console.log('Request failed', error)
+                msg.innerHTML = 'Redis Server ERROR ....'
+            })
     })
     disconnectBtn.addEventListener('click', () => {
-        fetch('/api/redis/disconnect', {
-        mode: 'no-cors'
+        fetch('/api/redis/disconnect')
+            .then(status)
+            .then(json)
+            .then(function(data) {
+                console.log('Request succeeded with JSON response', data)
+                msg.innerHTML = 'Redis disconnected...'
+            })
+            .catch(function(error) {
+                console.log('Request failed', error)
+                msg.innerHTML = 'Redis Server ERROR ....'
+            })
     })
-    .then((res) => {
-        msg.innerHTML = "Redis Disconnected..."
-    })
-    })
+    // msg.insertAdjacentHTML('beforeend', "<b>Hello</b> <br>")
 
     viewBtn.addEventListener('click', () => {
-        fetch('/view/hello', {
-        mode: 'no-cors'
+        fetch('/view/hello')
+            .then(status)
+            .then(function(data) {
+                console.log('response', data.body)
+                msg.innerHTML = 'RESPONSE ....' + data.body
+            })
+            .catch(function(error) {
+                console.log('Request failed', error)
+                msg.innerHTML = 'API Server ERROR ....'
+            })
     })
-    .then((res) => {
-        msg.innerHTML = res
-    })
-    })
+
+
 </script>
 </body>
 
