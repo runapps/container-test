@@ -15,3 +15,4 @@ docker run --name session-db -d -p 6379:6379 redis
 docker run -d --name tomcat -p 8080:8080 빌드이미지 이름
 
 
+https://github.com/runapps/container-test.git

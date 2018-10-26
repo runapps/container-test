@@ -29,43 +29,48 @@ app.use(bodyParser.json({ limit: '50mb' }))
 app.get('/api/redis/connect', (req, res) => {
     redis = require('redis').createClient(config.redis.port, config.redis.hostname)
     redis.on('connect', () => {
-    log(`${config.redis.hostname}:${config.redis.port} redis connected...`)
-res.status(200).json(CODE200)
-})
+        log(`${config.redis.hostname}:${config.redis.port} redis connected...`)
+        res.status(200).json(CODE200)
+    })
 
-redis.on('error', (err) => {
-    if (err) {
-        log('error connecting redis for recommendations: ', err)
-        // handleRedisDisconnect
-    } else {
-        throw err
-    }
-})
-redis.on('reconnecting', () => {
-    log('redis reconnecting...')
-})
+    redis.on('error', (err) => {
+        if (err) {
+            log('error connecting redis for recommendations: ', err)
+            // handleRedisDisconnect
+        } else {
+            throw err
+        }
+    })
+    redis.on('reconnecting', () => {
+        log('redis reconnecting...')
+    })
 })
 
 app.get('/api/redis/disconnect', (req, res) => {
     redis.quit(() => {
-    log(`${config.redis.hostname}:${config.redis.port} redis disconnected...`)
-res.status(200).json(CODE200)
-})
+        log(`${config.redis.hostname}:${config.redis.port} redis disconnected...`)
+        res.status(200).json(CODE200)
+    })
 })
 
 app.get('/api/check/liveness', (req, res) => {
     res.status(200).json(CODE200)
 })
 app.get('/api/check/readiness', (req, res) => {
-    res.status(200).json(CODE200)
+    log(redis)
+    if (redis && redis.connected) {
+        res.status(200).json(CODE200)
+    } else {
+        res.status(500).json(CODE500)
+    }
 })
 
 app.use((req, res, next) => {
     req.socket.on('error', () => {
-})
-res.socket.on('error', () => {
-})
-next()
+    })
+    res.socket.on('error', () => {
+    })
+    next()
 })
 
 server.listen(config.server.port, config.server.hostname, () => {
