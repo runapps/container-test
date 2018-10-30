@@ -24,4 +24,4 @@ COPY  --from=builder /app/target/demo-0.0.1-SNAPSHOT.war /home/demo/ui/demo.war
 
 EXPOSE 8080 443
 
-CMD java $JAVA_OPTIONS -jar /home/doosan/ui/demo.war
+CMD java $JAVA_OPTIONS -jar /home/demo/ui/demo.war
