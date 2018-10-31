@@ -1,0 +1,22 @@
+##
+version: '3'
+
+services:
+  session-db:
+    image: redis
+  auth-server:
+    image: ch/nodejs:v0.1
+    environment:
+    - REDIS_HOST=session-db
+    - REDIS_PORT=6379
+    depends_on:
+    - session-db
+  api-server:
+    image: spring-boot:1.0
+  web-server:
+    image: ch/nginx:v0.1
+    ports:
+    - "8081:80"
+    depends_on:
+    - auth-server
+    - api-server
